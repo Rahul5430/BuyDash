@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../../olx-logo.png';
+import Logo from '../../assets/logo.png';
 import './Signup.css';
 import { useHistory } from 'react-router';
 import SignUpLoading from '../Loading/SignUpLoading';

@@ -1,4 +1,4 @@
-# ⚛️ OLX clone
+# ⚛️ BuyDash
 
 ## 🦸 Tech Stack
 

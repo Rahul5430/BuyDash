@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import { AllPostContext } from '../../contextStore/AllPostContext';
 import { PostContext } from '../../contextStore/PostContext';
 import './Header.css';
-import OlxLogo from '../../assets/OlxLogo';
+import Logo from '../../assets/Logo';
 import SearchIcon from '../../assets/SearchIcon';
 import Arrow from '../../assets/Arrow';
 import SellButton from '../../assets/SellButton';
@@ -50,7 +50,7 @@ function Header() {
 		<div className='headerParentDiv'>
 			<div className='headerChildDiv'>
 				<div className='brandName'>
-					<OlxLogo></OlxLogo>
+					<Logo></Logo>
 				</div>
 				<div className='placeSearch'>
 					<input
