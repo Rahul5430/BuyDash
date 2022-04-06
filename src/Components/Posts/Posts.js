@@ -5,8 +5,9 @@ import './Post.css';
 import BarLoading from '../Loading/BarLoading';
 import PostCards from '../PostCards/PostCards';
 
-import { data } from '../../data';
 import { AllPostContext } from '../../contextStore/AllPostContext';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { db } from '../../firebase/config';
 
 function Posts() {
 	const { setAllPost } = useContext(AllPostContext);
@@ -14,15 +15,32 @@ function Posts() {
 	const [posts2, setPosts2] = useState([]); //for showing all posts in Ascending order of date
 	const [loading, setLoading] = useState(false);
 	const [loading2, setLoading2] = useState(false);
+
 	useEffect(() => {
 		setLoading(true);
 		setLoading2(true);
-		setPosts2(data);
-		setAllPost(data);
-		setLoading(false);
-		setPosts(data.slice().reverse());
-		setLoading2(false);
-		console.log(data);
+		getDocs(query(collection(db, 'products'), orderBy("createdAt", "desc"))).then((snapshot) => {
+			let allPostsDescendingOder = snapshot.docs.map((product) => {
+				return {
+					...product.data(),
+					id: product.id,
+				};
+			});
+			console.log(allPostsDescendingOder);
+			setPosts2(allPostsDescendingOder);
+			setAllPost(allPostsDescendingOder);
+			setLoading(false);
+		});
+		getDocs(query(collection(db, 'products'), orderBy("createdAt", "asc"))).then((snapshot) => {
+			let allPostsAscendingOder = snapshot.docs.map((product) => {
+				return {
+					...product.data(),
+					id: product.id,
+				};
+			});
+			setPosts(allPostsAscendingOder);
+			setLoading2(false);
+		});
 	}, [setAllPost]);
 	// quickMenuCards assign all cards of post item later it will be displayed
 	let quickMenuCards = posts.map((product, index) => {

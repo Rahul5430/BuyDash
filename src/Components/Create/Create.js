@@ -5,6 +5,10 @@ import Header from '../Header/Header';
 import { AuthContext } from '../../contextStore/AuthContext';
 import { useHistory } from 'react-router';
 import GoLoading from '../Loading/GoLoading';
+import { addDoc, collection } from 'firebase/firestore';
+import { ref, uploadBytes } from 'firebase/storage';
+import { db, storage } from '../../firebase/config';
+import { data } from '../../data';
 
 const Create = () => {
 	const { user } = useContext(AuthContext);
@@ -20,6 +24,11 @@ const Create = () => {
 		let date = new Date().toDateString();
 		// add new post along with image to database with following fields:- name, category, price, description, url, userId, createdAt
 		// then history.push("/");
+		const storageRef = ref(storage, 'images/' + image.name);
+		uploadBytes(storageRef, image).then((snapshot) => {
+			console.log(snapshot);
+		});
+		console.log(data);
 	};
 	return (
 		<Fragment>
