@@ -1,7 +1,9 @@
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import Logo from '../../assets/logo.png';
+import { auth } from '../../firebase/config';
 import RoundLoading from '../Loading/RoundLoading';
 import './Login.css';
 
@@ -13,9 +15,14 @@ function Login() {
 	const handleSubmit = (e) => {
 		setLoading(true);
 		e.preventDefault();
-		return setTimeout(() => {
-			history.push('/');
-		}, 1000);
+		signInWithEmailAndPassword(auth, email, password)
+			.then(() => {
+				history.push('/');
+			})
+			.catch((error) => {
+				alert(error.message);
+				setLoading(false);
+			});
 	};
 	return (
 		<>

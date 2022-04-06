@@ -11,6 +11,9 @@ import SellButtonPlus from '../../assets/SellButtonPlus';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../contextStore/AuthContext';
 import Search from '../Search/Search';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase/config';
+
 function Header() {
 	const { allPost } = useContext(AllPostContext);
 	const { setPostContent } = useContext(PostContext);
@@ -44,8 +47,11 @@ function Header() {
 	const { user } = useContext(AuthContext);
 
 	const logoutHandler = () => {
-		// logout user
+		signOut(auth).then(() => {
+			history.push('/login');
+		});
 	};
+
 	return (
 		<div className='headerParentDiv'>
 			<div className='headerChildDiv'>

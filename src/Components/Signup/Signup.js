@@ -4,20 +4,42 @@ import Logo from '../../assets/logo.png';
 import './Signup.css';
 import { useHistory } from 'react-router';
 import SignUpLoading from '../Loading/SignUpLoading';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../../firebase/config';
 
 export default function Signup() {
 	const history = useHistory();
-	let [name, setName] = useState('');
-	let [email, setEmail] = useState('');
-	let [phone, setPhone] = useState('');
-	let [password, setPassword] = useState('');
-	let [loading, setLoading] = useState(false);
+	const [name, setName] = useState('');
+	const [email, setEmail] = useState('');
+	const [phone, setPhone] = useState('');
+	const [password, setPassword] = useState('');
+	const [loading, setLoading] = useState(false);
 	const handleSubmit = (e) => {
 		setLoading(true);
 		e.preventDefault();
-		return setTimeout(() => {
-			history.push('/login');
-		}, 1000);
+		createUserWithEmailAndPassword(auth, email, password)
+			.then((userCredential) => {
+				console.log(userCredential);
+				updateProfile(auth.currentUser, {
+					displayName: name,
+				}).then(() => {
+					setDoc(doc(db, 'users', userCredential.user.uid), {
+						id: userCredential.user.uid,
+						name: name,
+						phone: phone,
+					});
+				});
+			})
+			.then(() => {
+				history.push('/');
+			})
+			.catch((error) => {
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				alert(`${errorCode} - ${errorMessage}`);
+				setLoading(false);
+			});
 	};
 	return (
 		<>
