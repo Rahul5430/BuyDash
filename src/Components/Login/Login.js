@@ -8,9 +8,9 @@ import RoundLoading from '../Loading/RoundLoading';
 import './Login.css';
 
 function Login() {
-	let [email, setEmail] = useState('');
-	let [password, setPassword] = useState('');
-	let [loading, setLoading] = useState(false);
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [loading, setLoading] = useState(false);
 	const history = useHistory();
 	const handleSubmit = (e) => {
 		setLoading(true);

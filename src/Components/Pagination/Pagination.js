@@ -3,7 +3,7 @@ import "./pagination.css";
 import { AllPostContext } from "../../contextStore/AllPostContext";
 function Pagination({ setCurrentPage }) {
   const { allPost } = useContext(AllPostContext);
-  let [activeItem, setActiveItem] = useState("");
+  const [activeItem, setActiveItem] = useState("");
   let numberOfPages = [];
   let itemsPerPage = 8;
   for (let i = 1; i <= Math.ceil(allPost.length / itemsPerPage); i++) {

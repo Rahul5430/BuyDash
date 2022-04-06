@@ -5,15 +5,16 @@ import Header from '../Header/Header';
 import { AuthContext } from '../../contextStore/AuthContext';
 import { useHistory } from 'react-router';
 import GoLoading from '../Loading/GoLoading';
+
 const Create = () => {
 	const { user } = useContext(AuthContext);
 	const history = useHistory();
-	let [name, setName] = useState('');
-	let [category, setCategory] = useState('');
-	let [price, setPrice] = useState('');
-	let [description, setDescription] = useState('');
-	let [image, setImage] = useState();
-	let [loading, setLoading] = useState(false);
+	const [name, setName] = useState('');
+	const [category, setCategory] = useState('');
+	const [price, setPrice] = useState('');
+	const [description, setDescription] = useState('');
+	const [image, setImage] = useState();
+	const [loading, setLoading] = useState(false);
 	const handleSubmit = () => {
 		setLoading(true);
 		let date = new Date().toDateString();

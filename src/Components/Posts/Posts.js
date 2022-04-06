@@ -10,10 +10,10 @@ import { AllPostContext } from '../../contextStore/AllPostContext';
 
 function Posts() {
 	const { setAllPost } = useContext(AllPostContext);
-	let [posts, setPosts] = useState([]); //for showing all posts in Descending order of date
-	let [posts2, setPosts2] = useState([]); //for showing all posts in Ascending order of date
-	let [loading, setLoading] = useState(false);
-	let [loading2, setLoading2] = useState(false);
+	const [posts, setPosts] = useState([]); //for showing all posts in Descending order of date
+	const [posts2, setPosts2] = useState([]); //for showing all posts in Ascending order of date
+	const [loading, setLoading] = useState(false);
+	const [loading2, setLoading2] = useState(false);
 	useEffect(() => {
 		setLoading(true);
 		setLoading2(true);
