@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { Fragment, useState, useContext } from 'react';
 import './Create.css';
 import Header from '../Header/Header';
@@ -6,9 +5,8 @@ import { AuthContext } from '../../contextStore/AuthContext';
 import { useHistory } from 'react-router';
 import GoLoading from '../Loading/GoLoading';
 import { addDoc, collection } from 'firebase/firestore';
-import { ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebase/config';
-import { data } from '../../data';
 
 const Create = () => {
 	const { user } = useContext(AuthContext);
@@ -22,13 +20,23 @@ const Create = () => {
 	const handleSubmit = () => {
 		setLoading(true);
 		let date = new Date().toDateString();
-		// add new post along with image to database with following fields:- name, category, price, description, url, userId, createdAt
-		// then history.push("/");
 		const storageRef = ref(storage, 'images/' + image.name);
-		uploadBytes(storageRef, image).then((snapshot) => {
-			console.log(snapshot);
+		uploadBytes(storageRef, image).then(({ ref }) => {
+			getDownloadURL(ref).then((url) => {
+				addDoc(collection(db, "products"), {
+					name,
+					category,
+					price,
+					description,
+					url,
+					userId: user.uid,
+					createdAt: date,
+				}).then(() => {
+					setLoading(false);
+					history.push("/");
+				});
+			});
 		});
-		console.log(data);
 	};
 	return (
 		<Fragment>
