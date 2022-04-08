@@ -26,7 +26,6 @@ function Posts() {
 					id: product.id,
 				};
 			});
-			console.log(allPostsDescendingOder);
 			setPosts2(allPostsDescendingOder);
 			setAllPost(allPostsDescendingOder);
 			setLoading(false);
