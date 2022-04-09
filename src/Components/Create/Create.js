@@ -1,10 +1,16 @@
-import React, { Fragment, useState, useContext } from 'react';
+import React, { Fragment, useState, useContext, useEffect } from 'react';
 import './Create.css';
 import Header from '../Header/Header';
 import { AuthContext } from '../../contextStore/AuthContext';
 import { useHistory } from 'react-router';
 import GoLoading from '../Loading/GoLoading';
-import { addDoc, collection } from 'firebase/firestore';
+import {
+	addDoc,
+	collection,
+	getDocs,
+	orderBy,
+	query,
+} from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebase/config';
 
@@ -17,13 +23,16 @@ const Create = () => {
 	const [description, setDescription] = useState('');
 	const [image, setImage] = useState();
 	const [loading, setLoading] = useState(false);
+	const [categories, setCategories] = useState([]);
+	const [categoryLoading, setCategoryLoading] = useState(false);
+
 	const handleSubmit = () => {
 		setLoading(true);
 		let date = new Date().toDateString();
 		const storageRef = ref(storage, 'images/' + image.name);
 		uploadBytes(storageRef, image).then(({ ref }) => {
 			getDownloadURL(ref).then((url) => {
-				addDoc(collection(db, "products"), {
+				addDoc(collection(db, 'products'), {
 					name,
 					category,
 					price,
@@ -33,11 +42,25 @@ const Create = () => {
 					createdAt: date,
 				}).then(() => {
 					setLoading(false);
-					history.push("/");
+					history.push('/');
 				});
 			});
 		});
 	};
+
+	useEffect(() => {
+		setCategoryLoading(true);
+		getDocs(
+			query(collection(db, 'categories'), orderBy('name', 'asc'))
+		).then((snapshot) => {
+			let allCategories = snapshot.docs.map((category) => {
+				return category.data().name;
+			});
+			setCategories(allCategories);
+			setCategoryLoading(false);
+		});
+	}, []);
+
 	return (
 		<Fragment>
 			<Header />
@@ -65,15 +88,13 @@ const Create = () => {
 				>
 					{' '}
 					<option>Select Category</option>
-					<option value='Cars'>Cars</option>
-					<option value='Cameras & Lenses'>Cameras & Lenses</option>
-					<option value='Computers & Laptops'>
-						Computers & Laptops
-					</option>
-					<option value='Mobile Phones'>Mobile Phones</option>
-					<option value='Motorcycles'>Motorcycles</option>
-					<option value='Tablets'>Tablets</option>
+					{categories.map((category) => (
+						<option value={category} key={`option-${category}`}>
+							{category}
+						</option>
+					))}
 				</select>
+				{categoryLoading ? <div>Loading Categories...</div> : null}
 				<br />
 				<label>Price</label>
 				<br />
