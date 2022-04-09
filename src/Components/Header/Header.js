@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { AllPostContext } from '../../contextStore/AllPostContext';
 import { PostContext } from '../../contextStore/PostContext';
@@ -12,7 +13,7 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../../contextStore/AuthContext';
 import Search from '../Search/Search';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase/config';
+import { auth, db } from '../../firebase/config';
 
 function Header() {
 	const { allPost } = useContext(AllPostContext);
@@ -20,6 +21,17 @@ function Header() {
 	const history = useHistory();
 	const [filteredData, setFilteredData] = useState([]);
 	const [wordEntered, setWordEntered] = useState('');
+	const [languages, setLanguages] = useState([]);
+
+	useEffect(() => {
+		getDocs(collection(db, 'languages')).then((snapshot) => {
+			let allLanguages = snapshot.docs.map(
+				(language) => language.data().name
+			);
+			setLanguages(allLanguages);
+		});
+	}, []);
+
 	const handleFilter = (event) => {
 		const searchWord = event.target.value;
 		setWordEntered(searchWord);
@@ -99,7 +111,9 @@ function Header() {
 				</div>
 
 				<div className='language'>
-					<span> ENGLISH </span>
+					{languages.map((language) => (
+						<span key={language}>{language}</span>
+					))}
 					<Arrow></Arrow>
 				</div>
 				<div className='loginPage'>
