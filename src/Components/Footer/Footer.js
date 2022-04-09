@@ -8,6 +8,7 @@ function Footer() {
 	const [locations, setLocations] = useState([]);
 	const [about, setAbout] = useState([]);
 	const [footerRightContent, setFooterRightContent] = useState([]);
+	const [countries, setCountries] = useState([]);
 
 	useEffect(() => {
 		getDocs(collection(db, 'locations')).then((snapshot) => {
@@ -30,6 +31,14 @@ function Footer() {
 			);
 			setFooterRightContent(footerRightContentDetails);
 		});
+		getDocs(query(collection(db, 'countries'), orderBy('id', 'asc'))).then(
+			(snapshot) => {
+				let countries = snapshot.docs.map(
+					(content) => content.data().name
+				);
+				setCountries(countries);
+			}
+		);
 	}, []);
 
 	return (
@@ -73,7 +82,10 @@ function Footer() {
 				</div>
 			</div>
 			<div className='footer'>
-				<p>Other Countries England - South Africa - India</p>
+				<p>
+					Other Countries:
+					{countries.map((country) => `- ${country} `)}
+				</p>
 				<p>Free Classifieds in US. © 2006-2022 BuyDash</p>
 			</div>
 		</div>
